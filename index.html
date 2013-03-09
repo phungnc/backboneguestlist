@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+  
+  <head>
+    <title>GuestList</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">       
+    <link rel="stylesheet" href="assets/css/prettify.css">  
+    <!--link rel="stylesheet" href="assets/css/site.css"-->  
+
+    <link rel="stylesheet" href="assets/css/bootstrap-editable.css">
+
+    <style type="text/css">
+      .input-smini {width: 30px;}
+      img {vertical-align: top; top:10px; left: 0px}
+      ul {margin:0 0 0px 10px;}
+      /*ul li {position: relative; border-bottom: 1px solid #e8e8e8; }*/
+
+      .avatar {height: 50px; width: 50px;border-radius:5px;position: absolute;}
+      .group {font-size: 11px;}
+
+      .guest {margin-left: 7px; margin-right: 10px; height: 55px }
+
+      .accept{width: 15px;height: 15px;margin: -1px 3px 0 2px;background-position: -72px -571px;}
+      .decline{ width: 15px;height: 15px;margin: 0px 3px -1px 2px;background-position: -48px -571px; }
+      .notyet{width: 15px;height: 15px;margin: -1px 3px 0 2px;background-position: -96px -571px;}
+
+      #fbFriends .fullname{ font-size: 12px;}
+      #guestList .row, #fbFriends .row { padding: 10px; margin-left: 45px;}
+
+      ul#fbFriends li, ul#guestList li {
+        list-style-type:none;
+        position: relative; 
+        border-bottom: 1px solid #e8e8e8;
+      }
+      .topright-actions {
+        position: absolute;
+        right: 10px;
+        top: 1em;
+        z-index: 4;
+      }
+      i:hover{
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #fbf4f4;
+        /*vertical-align: -5px;*/
+      }
+      .guest-header{
+        height: 50px;
+      }
+    </style> 
+
+  </head>
+  
+  <body>
+    <div id="fb-root"></div> 
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#">Tool</a>
+          <div class="navbar-content">
+            <ul class="nav">
+              <li class="active">
+                <a href="#">GuestList</a> 
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <h4>This is small Guest List demo using BackBone.js</h4>
+       <p>Facebook Friends Loading is base on <a href="http://phungnc.github.com/backbonefbfriends/" target="_blank">this sample</a></p>
+       <p>Use library <a href="http://vitalets.github.com/x-editable" target="_blank">x-editable</a> to create editable elements on Guest List</p>
+       <p>This is client side only demo.</p>
+       <p>The source code is available in
+         <a href="https://github.com/phungnc/backbonefbfriends">this repository </a> on GitHub
+       </p>
+      <div class="row-fluid">
+        <div id="sidebar" class="span3">
+          <div class="well well-small">
+              <button type="button" id="load-fb-friends" class="btn btn-primary" data-loading-text="<i class='icon-spinner icon-spin'></i> Loading..."><i class="icon-facebook"></i> Load Facebook Friends</button>
+          </div>
+          <!--input type="text" class="search-query input-large"-->
+          <ul id="fbFriends"></ul>
+        </div>
+        <div id="main" class="span9">
+          <div class="well well-small">
+            <input type="text" class="input-large search-query" name="q" id="q" value="" placeholder="Enter a Keyword">
+          </div>
+          <div class="row-fluid">
+            <ul id="guestList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- TEMPLATE START -->
+<!-- GUEST TEMPLATE -->
+    <script type="text/template" id="guestTemplate">
+
+      <div class="row">
+        <div class="guest-header span5"> 
+          <img class="avatar" src="<%= avatar === null ? 'assets/pics/ava.gif' : avatar %>" />
+          <strong class="fullname"><%- name %></strong>
+          <!--input class="edit" value="<%- name %>"-->
+        </div>
+
+        <div class="span2">
+          <a data-type="select"  data-value="<%= group %>" data-pk="1" id="drop1" href="#" class="group" data-original-title="Select Group" ><%= group %></a>&nbsp;<span class="caret" style="vertical-align:middle"></span>
+        <!--
+          <div class="dropdown">
+            <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><%= group %> <b class="caret"></b></a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+              <li><a class="group" href="#">Family</a></li>
+              <li><a class="group" href="#">Company</a></li>
+              <li><a class="group" href="#">Buddy</a></li>
+              <li class="divider"></li>
+              <li><a class="group" href="#">Create new group</a></li>
+            </ul>
+          </div>
+         -->
+        </div>
+
+        <div class="span1">
+            <a data-type="select" data-value=<%= confirm %> data-pk="1" href="#" class="confirm"></a><!--span class="caret" style="vertical-align:middle"--></span>
+          <!--i class="<%= confirm === true ? "icon-ok-sign" : "icon-remove-sign" %>"></i-->
+        </div>
+        <div class="span1">  
+          <span>
+            <a href="#" data-type="text" class="number"><%- number %></a>
+          </span>
+        </div>
+        <div class="span1">
+          <span><!--button id="guest-remove-btn" class="btn btn-small" type="button"--><i class="icon-remove"></i><!--/button-->
+          </span>  
+        </div>
+      </div>
+
+    </script>
+<!-- ./GUEST TEMPLATE -->
+
+<!--  FACEBOOK TEMPLATE -->
+    <script type="text/template" id="fbFriendTemplate">
+      <div class="row"> 
+        <div class="friend-header">
+        <img class="avatar" src="<%= avatar === null ? 'assets/pics/ava.gif' : avatar %>" />
+          <strong class="fullname"><%= name %></strong>
+        </div>
+        <p class="group"><%= group %></p>
+        <div class="topright-actions">
+          <span>
+            <!--button id="fb-friend-remove-btn" class="btn btn-small" type="button"><i class="icon-minus"></i></button-->
+            <i id="fbFriendRemove" class="icon-minus"></i> /
+            <i id="fbFriendAdd" class="icon-plus"></i>
+            <!--button id="fb-friend-add-btn" class="btn btn-small" type="button"><i class="icon-plus"></i></button-->
+          </span>
+        </div>
+      </div>
+    </script>
+<!-- ./ FACEBOOK TEMPLATE -->    
+<!-- ./ TEMPLATE END --> 
+
+<!-- START .JS RESOURCE-->
+    <!-- load lib -->
+    <script src="js/libs/jquery.js"></script>
+    <script src="js/libs/underscore.js"></script>
+    <script src="js/libs/backbone.js"></script>
+
+    <script src="js/libs/backbone.localStorage.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/bootstrap-editable.js"></script>
+    <!-- load resource -->
+    <script src="js/app.js"></script>
+    <script src="js/utils.js"></script>
+
+    <script src="js/models/fbFriendModel.js"></script>
+    <script src="js/models/guestModel.js"></script>
+
+    <script src="js/collections/fbFriends.js"></script>
+    <script src="js/collections/guestList.js"></script>
+    <!-- Backbone View -->
+    <script src="js/views/GuestView.js"></script>
+    <script src="js/views/AppView.js"></script>
+
+    <script src="js/views/FBFriendListView.js"></script>
+    <script src="js/views/FBFriendView.js"></script>
+<!-- END .JS RESOURCE-->       
+  </body>
+
+</html>
