@@ -121,7 +121,7 @@
 				_.each(friends,function(friend) {
 
 					// limit friend number, just for testing
-					if ( this.length > 5 )  return (false);
+					if ( this.length > 50 )  return (false);
 					var uid = 0;
 					var flid = 0;
 					
