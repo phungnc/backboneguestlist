@@ -20,6 +20,9 @@
 			//console.log("fbGuest render");
 			// pass model attributes to template variable
 			this.$el.html(this.guestTemplate(this.model.attributes));
+			$(this.el.getElementsByClassName("icon-minus")).tooltip();
+			$(this.el.getElementsByClassName("icon-plus")).tooltip();
+			
 			return this;
 		},
 

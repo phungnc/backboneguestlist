@@ -9,7 +9,7 @@
 		guestTemplate: _.template($('#guestTemplate').html()),
 
 		events:{
-			"click #guest-remove-btn" : "clear",
+			"click .icon-remove" : "clear",
 			//"dblclick .fullname" : "changeName",
 			//"click .group" : "changeGroup"
 		},
@@ -23,12 +23,9 @@
 		},
 
 		//__group : [],
-
 		render: function(){
 			console.log("Guest render");
 			// pass model attributes to template variable
-			//console.log(this.model);
-			//this.model.attributes.number = this.model.attributes.number || 0;
 			this.$el.html(this.guestTemplate(this.model.attributes));
 
 			$(this.el.getElementsByClassName("fullname")).editable({
@@ -78,7 +75,8 @@
 					},
 					url:this.changeNumber
 				});
-
+			$(this.el.getElementsByClassName("icon-remove")).tooltip();
+			//
 			if(this.model){
 				groupName = this.model.attributes.group
 				var g = _.find(App.Views.Groups,function(group) {
@@ -89,15 +87,8 @@
 					App.Views.Groups.push({value: groupName , text:groupName});	
 				}
 			} 
-		
+	
 			return this;
-		},
-
-		getGroup: function(){
-			console.log("Guest getGroup");
-			//var group = [{value:"Company",text:"Company"},{value:"Family",text:"Family"},{value:"Buddy",text:"Buddy"}];
-			//var group = Views.appView.getGroup();
-			return this.__group;
 		},
 
 		changeName: function(params){
